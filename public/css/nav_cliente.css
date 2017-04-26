@@ -1,0 +1,11 @@
+@charset "utf-8";
+/* Nav Cliente*/
+nav ul li i{display:block; float:left; margin-left:8px; margin-top:0px; width:20px; height:20px; vertical-align:text-top; background-image:url(../img/sprite_menu_cliente.fw.png); background-position:0 0; background-repeat: no-repeat;}
+nav ul li a span{color:#626262; display:block; padding-left:40px;}
+nav ul li i.i-inicio{background-position:0 0px; width:20px; height:20px;}
+nav ul li i.i-perf{background-position:0 -52px; width:23px; height:22px;}
+nav ul li i.i-amig{background-position:0 -100px; width:23px; height:22px;}
+nav ul li i.i-club{background-position:0 -150px; width:23px; height:22px;}
+nav ul li i.i-mensa{background-position:0 -200px; width:23px; height:22px;}
+nav ul li i.i-tran{background-position:0 -250px; width:23px; height:23px;}
+

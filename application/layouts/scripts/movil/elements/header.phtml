@@ -1,0 +1,564 @@
+<script>
+var fb = {
+    config :{
+        // CONFIG VARS: 
+        app_id : <?php echo Zend_Registry::get('config')->facebook->appId; ?>, 
+        use_xfbml : true,
+        extendPermissions : 'email, read_friendlists' , 
+        // info: http://developers.facebook.com/docs/reference/api/permissions/
+        locale : 'es_ES' 
+        // all locales in: http://www.facebook.com/translations/FacebookLocales.xml
+        // END CONFIG VARS
+    },
+    perms : [],
+    hasPerm : function (perm) { for(var i=0, l=fb.perms.length; i<l; i++) { if(fb.perms[i] == perm) {return true;}} return false; },
+    logged : false,
+    user : false, // when login, is a user object: http://developers.facebook.com/docs/reference/api/user
+    login : function (callback){
+        FB.login(function(r) {
+            if (r.status == 'connected') {
+                FB.api('/me/permissions',function(perm){
+                    fb.logged = true;
+                    fb.perms = [];
+                    for(i in perm.data[0]){
+                        if (perm.data[0][i] == 1){
+                            fb.perms.push(i);
+                        }
+                    }
+                });    
+                fb.getUser(callback);
+            } else {
+                fb.logged = false;
+                fb.perms = [];
+                callback();
+            }
+        },{scope:fb.config.extendPermissions});
+        return false;
+    },
+    syncLogin : function (callback){
+        if (!callback) callback = function(){};
+        FB.getLoginStatus(function(r) {
+            if (r.status == 'connected' ) { 
+                FB.api('/me/permissions',function(perm){
+                    fb.logged = true;
+                    fb.perms = [];
+                    for(i in perm.data[0]){
+                        if (perm.data[0][i] == 1){
+                            fb.perms.push(i);
+                        }
+                    }
+                });    
+                fb.getUser(callback);
+                return true;
+            } else {
+                fb.logged = false;
+                callback();
+                return false;
+            }
+        });
+    },
+    logout : function(callback) {FB.logout(callback);},
+    getUser : function(callback){
+        FB.api('/me', function(r){
+            var user = r;
+            user.picture = "https://graph.facebook.com/"+user.id+"/picture?type=large";
+            fb.user=user; callback(user); 
+        }); 
+    },
+    getFriends : function(callback){
+        FB.api('/me/friends', function(r){
+            callback( r.data );
+        })
+    },
+    share : function(u_share, width_height){
+        window.open('https://www.facebook.com/sharer/sharer.php?u='+u_share, 'facebook-share-dialog', width_height);
+    },
+    sendMessage : function(to, username, requestCallback){
+        FB.ui({
+            method:'send',
+            to: to,
+            link: 'http://www.valeplaza.com/perfil/'+username
+        }, requestCallback );
+    },
+    publish : function (publishObj,callback,noReTry) {
+        // publishObj: http://developers.facebook.com/docs/reference/api/post   
+        if (fb.logged && fb.hasPerm('publish_stream')){ 
+            FB.api('/me/feed', 'post', publishObj, function(response) {
+                if (!response || response.error) {
+                    callback(false);
+                } else {
+                    callback(true);
+                }
+            });
+            return true;
+        }else{ 
+            if (!noReTry)
+                return fb.login(function() { return fb.publish(publishObj,callback,1)});
+            else{
+                callback(false);
+                return false;
+            }
+        }
+    },
+    readyFuncs : [],
+    ready: function(func){fb.readyFuncs.push(func)},
+    launchReadyFuncs : function () {for(var i=0,l=fb.readyFuncs.length;i<l;i++){fb.readyFuncs[i]();};}
+}
+
+
+window.fbAsyncInit = function() { 
+  if (fb.config.app_id) FB.init({appId: fb.config.app_id, status: true, cookie: true, xfbml: fb.config.use_xfbml});
+  fb.syncLogin(fb.launchReadyFuncs);
+};
+
+var oldload = window.onload;
+window.onload = function() {
+  var d = document.createElement('div'); d.id="fb-root"; document.getElementsByTagName('body')[0].appendChild(d);
+  var e = document.createElement('script'); e.async = true; e.src = document.location.protocol + '//connect.facebook.net/'+fb.config.locale+'/all.js';
+  document.getElementById('fb-root').appendChild(e);
+  if (typeof oldload == 'function') oldload();
+
+
+};
+
+/*************************************************************/
+
+</script>
+<script>
+$(document).ready(function(){
+    $('#a_login_fb').on('click', function(){
+        if(fb.logged){
+            //alert(fb.user.email)
+            $.ajax({
+                        type: 'post',
+                        url: '<?php echo Cit_Server::getContent()->host; ?>outh/loginfacebook',
+                        data:{
+                                'email_usu':fb.user.email,
+                                'nom_usu':fb.user.first_name,
+                                'ape_usu':fb.user.last_name
+                            },
+                            beforeSend:function(objeto){
+                                $('#bloquea').css("display",'block');
+                            },
+                            success: function(json) {
+                                $('#bloquea').css("display",'none');
+                                responce = jQuery.isEmptyObject($.trim(json))
+                                if(responce){
+                                    document.location.href="<?php echo Cit_Server::getContent()->host;?>"
+                                }else{
+                                    var response =  jQuery.parseJSON(json);
+                                    cad="";
+                                    $(response).each(function(k, v){
+                                        cad=v.mail
+                                    })
+                                    bootbox.alert("Usuario no registrado",function(){
+                                            document.location.href="<?php echo Cit_Server::getContent()->host; ?>unete?fn="+fb.user.first_name+"&ln="+fb.user.last_name+"&e="+fb.user.email
+                                    });
+                                }
+
+                                }
+                });            
+                    return false;
+        }else{
+            fb.login(function(){
+                if(fb.logged){
+                    //alert(fb.user.email)
+                    $.ajax({
+                                type: 'post',
+                                url: '<?php echo Cit_Server::getContent()->host; ?>outh/loginfacebook',
+                                data:{
+                                        'email':fb.user.email
+                                    },
+                                    beforeSend:function(objeto){
+                                        $('#bloquea').css("display",'block');
+                                    },
+                                    success: function(json) {
+                                        $('#bloquea').css("display",'none');
+                                        responce = jQuery.isEmptyObject($.trim(json))
+                                        if(responce){
+                                            document.location.href="<?php echo Cit_Server::getContent()->host; ?>"
+                                        }else{
+                                            var response =  jQuery.parseJSON(json);
+                                            cad="";
+                                            $(response).each(function(k, v){
+                                                cad=v.mail
+                                            })
+                                            bootbox.alert(cad);
+                                        }
+
+                                        }
+                    });        
+                        return false;
+                }
+            });
+        }
+    });
+}) ; 
+</script>
+<script type="text/javascript">
+$(document).ready(function(){
+
+        $(".buscar").keyup(function() {
+        var cajabusqueda = $(this).val();
+            if(cajabusqueda !=''){
+
+                    $.ajax({
+                            type: "POST",
+                            url: "<?php echo Cit_Server::getContent()->host; ?>index/buscar",
+                            data: {
+                                'like':cajabusqueda
+                            },
+                            cache: false,
+                                success: function(html)
+                                {
+                                    $("#display").html(html).show();
+                                }
+
+
+
+
+                    });
+            }else{
+                    $("#display").html('').hide();
+            }
+            return false;    
+
+
+        });
+        
+        $('#display').mouseout(function(){
+            $('body').click(function(){
+                $("#display").html('').hide();
+
+            });
+                return false;
+        });
+        
+        $('.notificaciones').mouseout(function(){
+            $('body').click(function(){
+                $(".notificaciones").hide();
+
+            });
+                return false;
+        });
+        
+        $('.neomensajes').mouseout(function(){
+            $('body').click(function(){
+                $(".neomensajes").hide();
+
+            });
+                return false;
+        });
+
+});
+
+jQuery(function($){
+   $("#cajabusqueda").Watermark("Buscar");
+   });
+</script>
+<script>
+    $(document).ready(function(){
+        if ($('#uploadLogoHeader').length) {
+                var button = $('#uploadLogoHeader'), interval;
+                    new AjaxUpload(button,{
+                        action: '../../../index/uploadlogocli',
+                        name: 'image',
+                        onSubmit : function(file, ext){
+                            //button.text('Subiendo');
+                            $("#sp_logo_head").text('Subiendo')
+                            this.disable();
+
+                            interval = window.setInterval(function(){
+                                var text = button.text();
+                                if (text.length < 11){
+                                    button.text(text + '.');
+                                } else {
+                                    $("#sp_logo_head").text('Subiendo')
+                                }
+                            }, 200);
+                        },
+                        onComplete: function(file, response){
+                            $("#sp_logo_head").text('Cambiar foto')
+
+                            window.clearInterval(interval);
+
+                            // Habilitar boton otra vez
+                            this.enable();
+                            location.reload();
+
+                        }
+                    });
+            }
+        });
+</script>
+<script>
+    $(document).ready(function(){
+        
+            $("#lnk-notificaciones").click(function(){
+                if($(".notificaciones").is(':visible')) {
+                    $(".notificaciones").hide()
+                }else{
+                    $(".notificaciones").show()
+                }
+                if($(".neomensajes").is(':visible')) {
+                    $(".neomensajes").hide()
+                }
+            })
+            $("#lnk-mensajes").click(function(){
+                if($(".neomensajes").is(':visible')) {
+                    $(".neomensajes").hide()
+                }else{
+                    $(".neomensajes").show()
+                }if($(".notificaciones").is(':visible')) {
+                    $(".notificaciones").hide()
+                }
+            })
+            $("#lnk_aceptar_sol").click(function(){
+                var usu= $("#lnk_aceptar_sol").attr('data-id')
+                $.ajax({
+                                type: 'post',
+                                url: '../../../index/responder',
+                                data:{
+                                        'usuID':usu,
+                                        'tipo': 'a'
+                                    },
+                                success: function(json) {
+                                        $("#row_u_"+usu).remove();
+                                        bootbox.alert("Felicidades tienes un nuevo amigo!",function(){
+                                            location.reload();
+                                        });
+                                }
+                            })
+            })
+            
+            $("#lnk_rechazar_sol").click(function(){
+                var usu= $("#lnk_rechazar_sol").attr('data-id')
+                $.ajax({
+                                type: 'post',
+                                url: '<?php echo Cit_Server::getContent()->host; ?>index/responder',
+                                data:{
+                                        'usuID':usu,
+                                        'tipo': 'r'
+                                    },
+                                success: function(json) {
+                                        $("#row_u_"+usu).remove();
+                                        location.reload();
+                                }
+                            })
+            })
+            
+            
+    })
+</script>
+<style type="text/css">
+/*body
+{
+font-family:"Lucida Sans";
+
+}
+*
+{
+margin:0px
+}
+
+
+.display_box
+{
+padding:4px; border-top:solid 1px #dedede; font-size:12px; height:40px;
+}
+
+.display_box:hover
+{
+background:#3b5998;
+color:#FFFFFF;
+}
+#shade
+{
+background-color:#00CCFF;
+
+}
+*/
+
+</style>
+<header id="header" class="clearfix" role="banner" <?php if(Zend_Registry::get('Susuario')->status) : ?> style="height:40px !important"<?php endif;?>>
+    <div class="logo">
+        <h1 <?php if(Zend_Registry::get('Susuario')->status) : ?> style="margin-top:-15px !important"<?php endif;?>> <a href="/">Valeplaza</a> </h1>
+    </div>
+    <div class="buscador" style="height: 30px;">
+
+        
+    </div>
+    <div class="pull-right"></div>
+        <?php if(Zend_Registry::get('Susuario')->status) : ?>
+   
+                    
+        <?php endif; ?>
+        <div class="connect pull-right">
+            <?php if(Zend_Registry::get('Susuario')->status) : ?>
+                    
+                <?php if(!empty(Zend_Registry::get('Susuario')->tienda_id)):?>
+                        <img src="<?php echo Zend_Registry::get('Susuario')->urlLogo; ?>" alt="Avatar" title="Avatar" style="width: 28px;height: 26px;margin-left: -144px"; >
+                        <div class="dropdown pull-right">
+                        <a class="icon_desp" href="#" data-toggle="dropdown" role="button"><?php echo ucwords(Zend_Registry::get('Susuario')->data['nombre']);?><b class="caret"></b></a>
+                            <div role="menu" class="dropdown-menu dd-socio">
+                            <img src="<?php echo Zend_Registry::get('Susuario')->urlLogo; ?>" alt="Logo" title="Logo" />
+                            <ul role="menu">
+                                <li><a href="../../../socio/misdatos" role="menuitem"><i class="icon icon-config-black"></i><span>Configuración de cuenta</span></a></li>
+                                <!--<li><a href="#" role="menuitem"><i class="icon icon-bullet"></i> <span>Mis marcas</span></a></li>-->
+                                <li><a href="<?php echo $this->baseUrl('outh/logout'); ?>" role="menuitem"><i class="icon icon-logout"></i> <span>Salir</span></a></li>
+                            </ul>
+                        </div>
+                        </div>
+
+                        
+                <?php else: ?>
+                        <img id="src_logo_head_up"src="<?php echo Zend_Registry::get('Susuario')->urlLogo; ?>" alt="Avatar" title="Avatar" style="width: 28px;height: 26px;margin-left: -142px">
+                        <div class="dropdown pull-right">
+                            <a class="icon_desp" href="#" data-toggle="dropdown" role="button"><?php echo ucwords(Zend_Registry::get('Susuario')->data['nombre']);?><b class="caret"></b></a>
+                            <div role="menu" class="dropdown-menu dd-socio"><!-- dd-badgefull -->
+                                <img id="src_logo_head"src="<?php echo Zend_Registry::get('Susuario')->urlLogo; ?>" alt="Logo" title="Logo" />
+                                <ul role="menu">
+                                   <li><a href="../../../socio/misdatos" role="menuitem"><i class="icon icon-config-black"></i><span>Configuración de cuenta</span></a></li> 
+                                   <li><a href="#" role="menuitem" id="uploadLogoHeader"><i class="icon icon-picture"></i><span id="sp_logo_head">Cambiar foto</span></a></li>
+                                   <li><a href="<?php echo $this ->baseUrl('outh/logout'); ?>" role="menuitem"><i class="icon icon-logout"></i> <span>Salir</span></a></li>
+                                </ul>
+                               
+                            </div>
+                        </div>
+                <?php endif;?>
+              
+            <?php else: ?>
+             <div>
+                 <form method="post" id="frm-registro">
+                    <input type="text" value="" placeholder="Correo" class="logeo" id="header_correo">
+                    <input type="password" value="" placeholder="Contraseña" class="pass" id="header_pass">
+                    <a class="olvid" href="<?php echo Cit_Server::getContent()->host; ?>recuperar-password">¿Has olvidado tu contraseña?</a>
+
+                  <input type="checkbox" name="transporte" value="" style="
+    margin-left: -347px;
+    margin-top: 51px;
+    position: absolute;
+">
+<p style="
+    position: absolute;
+    margin-left: 21px;
+    margin-top: 8px;
+    font-size: 10px;
+">Recordarme</p>
+                    <div class="botones_login"><input type="submit" class="btn-success-login" value="Entrar"  name="button_enviar">
+                <input type="button" class="btn-success-face" value="Iniciar Sesion" id="a_login_fb" name="button_enviar">
+                    </div>
+                 </form>
+                </div>
+
+               <!--<div class="lst-registro">
+                    <ul class="">
+                        <li><a href="<?php //echo $this->baseUrl('unete'); ?>">Registro</a></li>
+                        <li class="pipe">|</li>
+                        <li><a href="<?php //echo $this->baseUrl('login'); ?>">Iniciar sesión</a></li>
+                    </ul>
+                </div>-->
+            <?php endif; ?> 
+
+        </div>
+        <?php if(Zend_Registry::get('Susuario')->status) : ?>
+            <ul class="user-info pull-right">
+                        
+                            <li class="i-seguidores" >
+                                <div class="dropdown">
+                                    <a href="#" <?php //if(!empty($this->newNotificaciones)):?>id="lnk-notificaciones" <?php //endif;?>><?php if(empty($this->newNotificaciones)):?>0<?php else: echo $this->newNotificaciones;  endif;?></a>
+                                </div> 
+                            </li>
+                        
+                            <li class="i-mensajes">
+                                <div class="dropdown">
+                                    <a href="#" id="lnk-mensajes"><?php if(empty($this->newMessages)):?>0<?php else: echo $this->newMessages;  endif;?></a>
+                                </div>
+                            </li>
+                            
+                </ul>
+        
+    
+    <div class="notificaciones">
+            <?php if(empty($this->notificaciones)):?>
+            <?php echo "No hay nuevas solicitudes de amistad"; ?>
+            <?php else: echo $this->notificaciones;?>
+            <?php endif;?>   
+    </div>
+    <div class="neomensajes">
+            <?php if(empty($this->Messages)):?>
+            <?php echo "No hay nuevos mensajes en su bandeja"; ?>
+            <?php else: echo $this->Messages;?>
+            <?php endif;?>   
+    </div>
+    <div id="display" class="display-buscador">
+    </div><?php endif; ?>
+    </header>
+<div id="bloquea" class="cargando" style="display:none;">
+<img src="<?php echo Cit_Server::getContent()->host; ?>img/ico_loading.gif" style="margin: 220px auto !important;">
+</div>
+<script>
+     $('#frm-registro').validate({
+                        rules:{
+                                 
+                                    header_pass : {    
+                                                    required : true //para validar campo vacio
+                                    },
+                                    header_correo : {    
+                                                    required : true,
+                                                    email:true//para validar campo vacio
+                                    }
+                                                                    
+                      },
+                        messages:{
+                                    
+                                    header_pass : {    
+                                                    required : 'Falta indicar el password' //para validar campo vacio
+                                    },
+                                    header_correo : {    
+                                            //para validar campo vacio
+                                        required    : "Falta indicar su correo electronico",
+                                         email  : "Ingrese un formato correcto de correo"//para validar formato email
+                                    }
+                                             
+                        }, 
+                        highlight: function(element) {
+                             $(element).addClass('errorborde');
+                        }, 
+                        unhighlight: function(element) {
+                             $(element).removeClass('errorborde');
+                        },
+                        submitHandler: function(form) {
+                                
+                                        $.ajax({
+                                                        type: 'post',
+                                                        url: '<?php echo Cit_Server::getContent()->host; ?>outh/login',
+                                                        data:{
+                                                                'password':$("#header_pass").val(),
+                                                                'email':$("#header_correo").val()
+                                                            },
+                                                            beforeSend:function(objeto){
+                                                                $('#bloquea').css("display",'block');
+                                                            },
+                                                            success: function(json) {
+                                                                $('#bloquea').css("display",'none');
+                                                                responce = jQuery.isEmptyObject($.trim(json))
+                                                                if(responce){
+                                                                    document.location.href="<?php echo Cit_Server::getContent()->host; ?>"
+                                                                }else{
+                                                                    var response =  jQuery.parseJSON(json);
+                                                                    cad="";
+                                                                    $(response).each(function(k, v){
+                                                                        cad=v.mail
+                                                                    })
+                                                                    bootbox.alert(cad);
+                                                                }
+                                                                    
+                                                                }
+                                            });        
+                                        return false;
+                                
+                        }
+                        
+                    });
+</script>

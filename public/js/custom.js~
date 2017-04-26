@@ -1,0 +1,12 @@
+$(document).ready(function() {
+    $("#sidebar").mouseenter(function(event) {
+        $(this).removeClass('navalone');
+        $(this).css('width', '124px');
+        $('.main').css('marginLeft', '124px');
+    })
+    .mouseleave(function(event) {
+        $(this).addClass('navalone');
+        $(this).css('width', '44px');
+        $('.main').css('marginLeft', '44px');
+    });
+});

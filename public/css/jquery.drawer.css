@@ -1,0 +1,63 @@
+/* jQuery Drawer ============================== */
+
+
+.drawer {
+	width: 100%;
+	border-top: 1px solid #E0E0E0;
+	border-radius: 3px;
+
+}
+
+.drawer-item {
+	/*border-bottom: 1px solid #E0E0E0;*/
+}
+	.drawer-item-active .drawer-header {
+		background: #A6A6A6;
+		transition: 0.25s;
+		  color: #fff;
+                    margin-bottom: 2px;
+	}
+	.drawer-item-active .drawer-header-icon {
+		  color: #fff;
+	}
+
+.drawer-header {
+  background: #A6A6A6;
+  color: #fff;
+  /*padding: 5px 10px 10px 20px;*/
+   padding: 8px 12px 12px 40px;
+  cursor: pointer;
+  border-right: 1px solid #E0E0E0;
+  border-left: 1px solid #E0E0E0;
+  height: 15px;
+  transition: 0.25s;
+    margin-bottom: 1px;
+}
+	.drawer-header h1 {
+	  float: left;
+  font-size: 15px;
+  margin: 0;
+  font-family: 'typo_round_regular_demoRg';
+	}
+
+.drawer-content {
+	border-left: 1px solid #E0E0E0;
+	border-right: 1px solid #E0E0E0;
+	border-top: 1px solid #E0E0E0;
+	display: none;
+	padding: 12px 12px 12px 12px;
+
+	background: #FFF;
+	font-size: 13px;
+          margin-bottom: 1px;
+}
+	
+
+.drawer-header-icon {
+	float: right;
+	margin-top: 0px;
+	color:  #515151;
+}
+	.drawer-header-icon.drawer-header-icon-active {
+		transform: rotate(180deg);
+	}

@@ -1,0 +1,16 @@
+<div class="heading">
+    <h3><?php if(!empty($this->pageActual['rec_des']))echo $this->pageActual['rec_des'] ?></h3>
+    
+    <ul class="breadcrumb">
+        <li>Estas en : </li>
+        <li>
+            <a href="#" class="tip" title="back to dashboard">
+                <span class="icon16 icomoon-icon-screen-2"></span>
+            </a>
+            <span class="divider">
+                <span class="icon16 icomoon-icon-arrow-right-2"></span>
+            </span>
+        </li>
+        <li class="active"><?php if(!empty($this->pageActual['rec_des']))echo $this->pageActual['rec_des'] ?></li>
+    </ul>
+</div><!-- End .heading-->

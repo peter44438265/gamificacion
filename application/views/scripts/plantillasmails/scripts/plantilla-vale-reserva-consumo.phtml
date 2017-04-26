@@ -1,0 +1,181 @@
+<style type="text/css">
+
+
+
+    body{margin:0; font-size:75%; line-height:1.42857; color:#626262; font-family:Arial,Helvetica,sans-serif; }
+
+    p{
+        font-size: 12px;
+        line-height: 120%;
+        margin: 0 0 13px;
+        font-family: Arial, Helvetica, sans-serif;
+        color: #505050;
+    }
+
+
+
+
+</style>
+<table width="800" border="0" align="center" cellpadding="0" cellspacing="0">
+    <tr>
+        <td style="font-size:0; line-height:0; padding:0"><img src="<?php echo Cit_Server::getContent()->host ?>img/header_correo-01.png" width="800" height="31" alt="Temaplate" /></td>
+    </tr>
+    <tr>
+        <td><table width="700" border="0" align="center" cellpadding="0" cellspacing="0">
+                <tr> <br>
+                <td valign="top">
+                    <h1 style="font-size:20px; line-height:20px; font-family:Arial, Helvetica, sans-serif; color:#008BD2; ">¡Felicidades <?php echo $this->reserva['nombre']; ?> acabas de seleccionar un vale!</h1>
+                    <p style="font-family:Arial, Helvetica, sans-serif; font-size:11px; color:#6d6c6c; line-height:14px; ">Aquí te dejamos los detalles de tu vale para que lo puedas canjear en los locales correspondientes</p>
+
+
+                      <div class="negsup">
+
+                          <!--<div style="  width: 440px;height: 263px;float: left;background-color: #dc0000;padding: 15px;">
+                                     <div style="  width: 77px;height: 110px;float: left;  padding: 25px 0px 0px 180px;text-align: center;color: #FFFFFF;">
+                                            <div><img  src="../img/tuerca.png"   style="width:75px;height:75px"></div> 
+                                            <div style="text-center"><span>Cafe</span></div>
+                                    </div>
+                              <div style="border: 2px dotted #FFFFFF;width: 436px;height: 260px;">
+                           
+                                  <div style="  width: 397px;min-height: 57px;font-size: 25px;padding: 24px 15px 0px 25px;line-height: 1;color: #ffffff;text-align: center;"> <span>Vale de</span><br><span style="font-size:50px">20</span></div>-->
+
+                          <div style="  width: 440px;height: 350px;background-color: #dc0000;padding: 15px;">
+                                     <div style="  width: 77px;height: 105px;padding: 0px 0px 0px 180px;text-align: center;color: #FFFFFF;">
+                                         
+                                  <div>
+                                      
+                                      <?php if(!empty($this->reserva['tienda_logo'])) $cadUrl= Cit_Server::getStatic()->host."imagenes/empresas/".$this->reserva['tienda_id']."/logo/".$this->reserva['tienda_logo']; else $cadUrl=Cit_Server::getContent()->host."img/tuerca.png";?>
+                                        <img  src="<?php echo $cadUrl; ?>" style="width:75px;height:75px">
+                                  </div> 
+                                  <div style="text-center"><span><?php echo $this->reserva['tienda_nombre']; ?></span></div>
+                          </div>
+                              <div style="border: 2px dotted #FFFFFF;width: 435px;height: 245px;">
+                           
+                                  <div style="   width: 407px;
+  min-height: 57px;
+  font-size: 25px;
+  padding: 10px 15px 0px 15px;
+  line-height: 1;
+  color: #ffffff;
+  text-align: center;"> <span>Vale de</span><br><span style="font-size:50px"><?php echo $this->reserva['consumo_moneda'].$this->reserva['oferta_monto_consumo']; ?></span></div>
+
+  
+                                
+  
+                                  <div style="  font-size: 17px;
+  width: 427px;
+  padding: 0px 5px 5px 5px;
+  color: #FFFFFF;
+  text-align: center;" ><span>Consumo mínimo de</span> <span><?php echo $this->reserva['consumo_moneda'].$this->reserva['oferta_consumo_minimo']; ?></span></div>
+  
+                          
+                                  <div style="  width: 400px;height:auto;text-align: center;  padding-left: 15px;"> <div style="width: 395px;height: 25px;background: #F4B61C;padding: 10px 10px 10px 10px;font-size: 25px;font-weight: bold;color: #FFFFFF;border-radius: 10px;">
+        <span >Codigo de vale :</span>
+        <?php $cod=  substr($this->reserva['reserva_codigo'],5);$str1=substr($cod,0,5);$str2=substr($cod,5,5);$codigo=$str1." - ".$str2;?>
+        <span ><?php echo $codigo; ?></span>
+                                      </div></div>
+  
+  
+                            <div style="  text-align: right;    width: 395px;height: 34px;font-size: 25px;  padding: 15px 15px 0px 25px;
+                                 color:#FFFFFF"><div><span>Costo de <?php echo $this->reserva['oferta_puntos']; ?> puntos</span></div></div>
+                    </div> 
+                </div>
+                         
+                
+            </div>
+                    <br><br>        
+                     <table style="width: 471px;height: auto;border-radius: 5px;border: 1px solid #c8c8c8;border-radius: 5px;">           
+                        <center>
+                            <td style="width: 315px;height: 45px;  color: #5f5f5f;text-align: left;padding: 8px 20px 8px 10px;">
+                                <span style="font-weight:bold;color: #5F5F5F;font-size: 15px;">Periodo de canje:</span><br>
+                                <p   >del <?php echo $this->reserva['oferta_ini_canje']; ?>  hasta el <?php echo $this->reserva['oferta_caducidad']; ?></p>           
+
+                            </td>
+                        </center>
+                      
+
+                    </table>
+                    
+                    
+                    
+     
+                    <br> 
+                
+                 
+                                          
+             
+                    <table style="width: 471px;height: auto;border-radius: 5px;border: 1px solid #c8c8c8;  border-radius: 5px;float:left; ">
+                        <tr>
+                            <td style="  width: 464px;
+  height: 25px;
+  border-bottom: 1px solid #c8c8c8;
+  padding: 5px;">
+                                <span style="color: #5F5F5F;font-size: 15px;">Términos de uso</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="font-size: 12px;padding: 12px;text-align: justify"><?php echo $this->reserva['oferta_condiciones']; ?></td>
+                        </tr>
+                    </table>
+                    <br>  
+                    <table style="width: 471px;height: auto;border-radius: 5px;border: 1px solid #c8c8c8;border-radius: 5px;">
+                    <tr>
+                                           <td style="  width: 449px;
+  height: 15px;
+  border-bottom: 1px solid #c8c8c8;
+  padding: 10px 0px 10px 10px;
+  border-radius: 5px;
+  border-bottom-right-radius: 0px;
+  border-bottom-left-radius: 0px;
+  line-height: 1;">
+                                <span style="color: #5F5F5F;font-size: 15px;">Locales de canje</span>
+                                           </td>
+                         <tr>
+    
+                            <?php if(!empty($this->reserva['direcciones'])): ?>
+                        <?php foreach ($this->reserva['direcciones'] as $key => $value): ?>
+                            <tr>
+                                <td style="width: 464px;height: 38px;padding: 5px 20px 5px 20px;font-size: 15px;">
+                                    <span style="color: #5F5F5F;font-size: 15px;"><?php echo $value['dir_nombre']; ?></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width: 205px;height: 70px;padding: 0px 5px 20px 20px;" >
+                                    <span>Dirección :</span><br>
+                                    <span>Telefono :</span><br>
+                                    <span>Horario de atención :</span><br>
+                                    <span>Condiciones adicionales :</span>
+
+                                </td>        
+                                <td style="width: 625px;height: 70px;padding: 0px 5px 20px 0px;" >                  
+                                    <span style="width: 260px;height: auto;"><?php echo $value['dir_direccion']; ?></span><br>
+                                    <span style="width: 260px;height: auto;"><?php echo $value['dir_telefono']; ?></span>   <br>               
+                                    <span style="width: 260px;height: auto;"><?php echo $value['dir_horario']; ?></span>  <br>       
+                                    <span style="width: 260px;height: auto;"><?php echo $value['dir_condiciones']; ?></span>                              
+
+                                </td>
+                            </tr>
+                        <?php endforeach;?>
+                        <?php endif; ?>
+                  
+                        
+                    </table>
+                    <div class="other">       
+
+                        <p style="font-family:Arial, Helvetica, sans-serif; font-size:11px; line-height:14px; color:#6d6c6c; ">Atte:<br />
+                            Equipo de Valeplaza<br />
+                            <a href="#" style="color:#5571b3; text-decoration:underline">www.valeplaza.com</a><br />          
+
+                    </div>
+                <td width="162" style="font-size:0; line-height:0; padding:0"><img src="<?php echo Cit_Server::getContent()->host ?>img/iconaso_correo-01.png" width="162" height="163" alt="Template" /></td>
+    </tr>
+</table></td>
+</tr>
+<tr>
+<td style="font-size:0; line-height:0; padding:0 ;"><a href="http://ayuda.valeplaza.com/"><img src="<?php echo Cit_Server::getContent()->host ?>img/footer_correo-01.png" width="800" height="25" alt="Template" /></a></td>
+</tr>
+</table>
+
+
+
+

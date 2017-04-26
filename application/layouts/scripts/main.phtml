@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es" prefix="og: http://ogp.me/ns#">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta http-equiv="Cache-control" content="no-cache">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta content="red social, valeplaza, red social valeplaza, la red social donde ganas ahorrando" name="keywords">
+        <meta content="valeplaza" name="author">
+        <meta content="La primera red social comercial" name="description">
+        <link type="image/x-icon" href="<?php echo Cit_Server::getContent()->host; ?>img/favicon.ico" rel="shortcut icon">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">       
+        <?php echo $this->headTitle('Valeplaza')->setSeparator('-');?>
+        <?php echo $this->headMeta(); ?> 
+        <?php if($this->mobile): echo $this->render('head-movil.phtml'); else: echo $this->render('head.phtml'); endif; ?>
+       
+    </head>
+
+    <body>
+        <div id="bloquea" class="cargando" style="display: none">
+                <img src="<?php echo Cit_Server::getContent()->host; ?>img/ico_loading.gif" style="margin: 220px auto !important;">
+        </div>
+        <script>
+            og={};
+            og.uriBase = '<?php echo Cit_Server::getContent()->host ?>';
+            $(document).ready(function() {
+            bootbox.setDefaults({
+                    locale: "es"
+                });
+            })
+        </script>
+        <!-- loading animation -->
+        <?php 
+        if(Zend_Registry::get('Susuario')->status){
+            if(Zend_Registry::get('Susuario')->rolID == Obj_SysRol::ROL_USUARIO){
+                #header para clientes
+                echo $this->render('header-cli.phtml');
+            }else if(Zend_Registry::get('Susuario')->rolID == Obj_SysRol::ROL_ADMIN_TIENDA_CORPORATIVO){
+                #header para empresas
+                echo $this->render('header-empresa.phtml');
+            }
+            else{
+                #header para tiendas
+                echo $this->render('header-tie.phtml');
+            }
+        }else{
+            #header sin session
+            echo $this->render('header.phtml');
+        }
+        ?>
+        <div id="content">
+            
+        <?php echo $this->layout()->content ?>
+        <div class="modal fade" id="Compartirhead" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog-landing">
+                <div class="modal-content-landing">
+                    <div class="titu-modl-comprt">
+                        <span>Compartir código de invitación</span>
+                        <button class="close clse-cmp" type="button" data-dismiss="modal" aria-hidden="true">x</button>
+                    </div>
+                    <div class="img-pnts-cmpt">
+                        <img  src="<?php echo Cit_Server::getContent()->host; ?>iconosconf/puntos.png">
+                    </div>
+                    <div class="txt-pnts-cmpt">
+                        <p>Gana 30$ dólares en Puntos VP</p>
+                        <p>compartiendo Valeplaza con tus amigos.</p>
+                    </div>
+                    <div class="url-btn-copia">
+                        <div class="disp-inl-bl">
+                            <input id="foo" class="inpt-unetea" type="text" value="<?php echo Cit_Server::getContent()->host."unetea/".Zend_Registry::get('Susuario')->nick; ?>">
+                            <button id="copiarbtn" class="boton-pre boton-url-copiar" value=""  data-clipboard-action="copy" data-clipboard-target="#foo"></button>
+                        </div>
+                    </div>
+                    <div class="txt-pnts-cmpt">
+                        <p>Copia el código y compártelo pegándolo en las </p>
+                        <p>redes sociales o por correo...     ¡Qué esperas! </p>
+                    </div>
+                    <div class="url-btn-copia">
+                        <img class="img-cmpt"src="<?php echo Cit_Server::getContent()->host; ?>iconosconf/shared.png">
+                    </div>
+                </div>        
+            </div>
+        </div>
+        <?php if( Zend_Registry::get('Susuario')->status) :?>
+        <!-- Modal -->
+        <div class="modal fade" id="modalFriends" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header tam_mh" >
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel">Mensaje privado</h4>
+                    </div>
+                    
+                    <div class="modal-body">
+                        <p class="p-nom">
+                            <select id="sl_listfriends" name="sl_listfriends">
+                                <?php if(!empty($this->listFriendsAll)):?>
+                                    <?php foreach ($this->listFriendsAll as $key => $value): ?>
+                                        <option value="<?php echo $value['usuario_id']?>"><?php  echo $value['cliente_nombre']." ".$value['cliente_apellido']; ?></option>
+                                    <?php endforeach;?>
+                                <?php endif;?>
+                            </select>
+                        </p>
+                        <textarea class="form-control txta_0 txtarea" rows="4" id="msj-text-friends" ></textarea>
+                    </div>
+                    
+                    <div class="modal-footer-mensaje">
+                        <div class="box-publicar">
+                            <center><input type="submit" value="Enviar" class="btn pull-left btn-success btng env_a" id="send-msj-friend" >
+                            <input type="button" value="Cancelar" data-dismiss="modal" aria-hidden="true" class="btn pull-right btn-danger btng  red-c" id="send-msj" ></center>
+                        </div>
+                    </div>
+                </div>
+            <!-- /.modal-content --> 
+            </div>
+        <!-- /.modal-dialog --> 
+        </div>
+        <!-- /.modal -->    
+        
+        <?php endif;?>
+        </div>
+        <?php   if( !Zend_Registry::get('Susuario')->status){
+                    echo $this->render('footer.phtml'); 
+                }else{
+                    if(Zend_Registry::get('Susuario')->rolID == Obj_SysRol::ROL_USUARIO){
+                        #footer para clientes
+                        echo $this->render('footer-cli.phtml');
+                    }else{
+                        #footer para tiendas
+                        echo $this->render('footer-tie.phtml');
+                    }
+                } ?>
+        <script>
+            $("#send-msj-friend").click(function(){
+                $.ajax({
+                        type: 'post',
+                        url: '<?php echo Cit_Server::getContent()->host; ?>mensaje/send',
+                        data:{
+                        'id':$("#sl_listfriends").val(),
+                        'msj':$("#msj-text-friends").val()
+                        },
+                        success: function(json) {
+                            if(json=='error1'){
+                                bootbox.alert("UD tiene que estar registrado");
+                            }else{
+                                if(json=='error1'){
+                                    bootbox.alert("UD tiene que estar registrado");
+                                }else{
+                                    $("#modalFriends").modal("hide");
+                                    bootbox.alert("El mensaje ha sido enviado satisfactoriamente");
+                                }
+                            }
+                        }
+                    })
+            })
+        </script>
+    </body>
+</html>
+
