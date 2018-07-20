@@ -6,14 +6,10 @@
  */
 class Obj_SysRol
 {
-    const ROL_ADMIN=1;
-    const ROL_ADMIN_TIENDA_CORPORATIVO=5;
-    const ROL_ADMIN_TIENDA=3;
-    const ROL_USUARIO=6;
-    const ROL_USUARIO_CORPORATIVO=7;
-    const ROL_MODERADOR_TIENDA=4;
-    const ROL_MARKET=2;
-    const ROL_MIXTO=8;
+    const ROL_ADM=1;
+    const ROL_CLIENTE=2;
+    const ROL_TIENDA=3;
+            
 
     /**
      * @var colums table

@@ -3,6 +3,7 @@
 class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
 
     protected function _initConfig() {
+        
         //Zend_Session::start();
         $dir = dirname(dirname(__FILE__)) . '/application/configs/application.ini';
         $config = new Zend_Config_Ini($dir, APPLICATION_ENV);
@@ -32,6 +33,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
     }
 
     protected function initAutoload() {
+        
         // BLOCK 1
         // this is a fallback to autoload our own classes in library
         $autoLoader = Zend_Loader_Autoloader::getInstance();
@@ -58,6 +60,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
     }
 
     public function initCron() {
+        
         $this->bootstrap('session');
         $this->bootstrap('multidb');
         $this->bootstrap('mail');

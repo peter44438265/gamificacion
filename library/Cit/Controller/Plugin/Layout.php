@@ -3,6 +3,7 @@
 class Cit_Controller_Plugin_Layout extends Zend_Controller_plugin_Abstract{
 
     public function preDispatch(Zend_Controller_Request_Abstract $request) {
+        //echo "entro";die;
         $resourceLayout = Zend_Controller_Front::getInstance()
             ->getParam('bootstrap')
             ->getResource('layout');
@@ -23,7 +24,6 @@ class Cit_Controller_Plugin_Layout extends Zend_Controller_plugin_Abstract{
         $view->addScriptPath(APPLICATION_PATH . '/views/scripts');
         //$view->addScriptPath(APPLICATION_PATH . '/views/scripts/partial');
         $view->addScriptPath(APPLICATION_PATH . '/views/scripts/perfiles');
-        //$view->titulo=$view->headTitle('Valeplaza')->setSeparator(' - ');
         
         //$view->headTitle()->prepend('valeplaza');
         //echo $view->headTitle();
@@ -37,12 +37,12 @@ class Cit_Controller_Plugin_Layout extends Zend_Controller_plugin_Abstract{
         //echo $uri;die;
         if ($moduleName == Obj_SysRecursos::MODULE_CPN && $actionName != 'error') {
                 
-                $detect= new Cit_Mobile();
+                /*$detect= new Cit_Mobile();
                 $view->mobile=false;
                 if ( $detect->isMobile() ) {
                     $view->mobile=true;
                     header( 'Location: http://prem.valeplaza.com'.$uri);die;
-                }
+                }*/
 
                 if(!empty($this->_sessId)){
                     $view->sessId = $this->_sessId;
@@ -51,9 +51,9 @@ class Cit_Controller_Plugin_Layout extends Zend_Controller_plugin_Abstract{
                     $view->sessId = $this->_sessId;
                 }
             
-        }else if( $moduleName == Obj_SysRecursos::MODULE_TAX && $controllerName == Obj_SysRecursos::CONTROLLER_EMP){
+        }/*else if( $moduleName == Obj_SysRecursos::MODULE_TAX && $controllerName == Obj_SysRecursos::CONTROLLER_EMP){
                 $layout->setLayout('main-empresa');
-        }
+        }*/
     }
 
 }

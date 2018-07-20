@@ -94,6 +94,7 @@ class Model_SysPaises extends Zend_Db_Table_Abstract
               ->join(array('t2'=>'cpn_usuario'),'t1.pais_id=t2.usuario_pais',array('')) 
               ->join(array('t3'=>'cpn_cliente'),'t2.usuario_id=t3.usuario_id',array(''))
               ->where('t3.cliente_id = ?', $id);
+            //echo $select;die;
               $result = $this->getAdapter()->fetchRow($select);
 
               return $result;

@@ -4,7 +4,7 @@ class Configuration {
 
     public static $pathnames = array(
         'documentRoot' => '../',
-        'urlRoot' => 'http://local.valeplaza.com/',
+        'urlRoot' => 'http://dev.mercaderos.com/',
         'removeImage' => 'removeImage.php',
         'uploadsTempMedium' => 'uploads/temp/medium/',
         'uploadsTempThumb' => 'uploads/temp/thumb/',

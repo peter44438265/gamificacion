@@ -41,7 +41,7 @@
                 </div>
                 <div class="fil-log-mdl">
                     <div class="cont-fil-log-mdl">
-                        <form method="post" id="frm-registro">
+                        <form method="post" id="frm-login">
                         <p class="titu-log-mdl">Iniciar Sesión</p>
                         <p class="tx-ing-log">Para ingresar deberás estar registrado como usuario en Mercaderos</p>
                         <div class="cont-inpt-log-mdl">
@@ -174,9 +174,9 @@ $("#slpais").change(function(){
 $("#modal_session_tienda").click(function(){
     $("#IniciarSesion").modal("hide");
     $("#IniciarSesion2").modal("show");
-})
+});
 
-$('#frm-registro').validate({
+$('#frm-login').validate({
     rules:{
         header_pass : {    
             required : true //para validar campo vacio
@@ -230,7 +230,6 @@ $('#frm-registro').validate({
                         })
                         bootbox.alert(cad);
                     }else{
-                        //document.location.href="<?php //echo Cit_Server::getContent()->host; ?>"+"perfil/"+response.nick
                         document.location.href="<?php echo Cit_Server::getContent()->host.$this->urlRedirect; ?>";
                        
                     }
@@ -277,43 +276,29 @@ $('#form-reg-cli').validate({
     submitHandler: function(form) {
         $.ajax({
             type: 'post',
-            url: '<?php echo Cit_Server::getContent()->host; ?>api/registrocliente',
+            url: '<?php echo Cit_Server::getContent()->host; ?>outh/registrocliente',
             data:{
-            'alias_usu':$("#alias_usu").val(),
-            'email_usu':$("#email_usu").val(),
-            'password_usu':$("#password_usu").val()
-            'fb':$("#h_fb").val()
+                'alias_usu':$("#alias_usu").val(),
+                'email_usu':$("#email_usu").val(),
+                'password_usu':$("#password_usu").val(),
+                'fb':$("#h_fb").val()
             },
             beforeSend:function(objeto){
-            $('#bloquea').css("display",'block');
+                $('#bloquea').css("display",'block');
             },    
             success: function(json) {
                 $('#bloquea').css("display",'none');
-                responce = jQuery.isEmptyObject($.trim(json));
-                if(responce){
-                    bootbox.alert("Gracias por registrarse, se ha unido al futuro de las ofertas online. Se le ha enviado un correo para que confirme su registro",function(){
-                        document.location.href="<?php echo Cit_Server::getContent()->host?>espera"
+                var response =  jQuery.parseJSON(json);
+                if(response.status){
+                    bootbox.alert(response.mensaje,function(){
+                        location.reload();
                     })
                 }else{
-                    var response =  jQuery.parseJSON(json);
-                    cad="";
-                    $(response).each(function(k, v){
-                        cad=v.mail_status
-                    })
-                    bootbox.alert(cad);
+                    bootbox.alert(response.mensaje);
                 }
             }
         });        
         return false;
     }                  
 });
-</script>
-
-<script>
-    /*$(document).ready(function() {
-        
-    $( "#content-pais" ).on( "change", "#flagstrap", function() {
-        document.location.href="<?php //echo Cit_Server::getContent()->host."?code=" ?>"+$("#flagstrap").val();
-      });
-    })*/
 </script>

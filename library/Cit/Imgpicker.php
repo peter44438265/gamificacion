@@ -417,7 +417,7 @@ class Cit_Imgpicker
 			call_user_func($this->options['crop_complete'], $image, $this);
 		}
 		$aws = new Cit_Service_E3();
-                $nameImageFix = rand(1, 9999999) . '_valeplaza_' . $image->name;
+                $nameImageFix = rand(1, 9999999) . '_mercaderos_' . $image->name;
                 $aws->putFile($image->versions->avatar->url, "imagenes/testcrop/" . $nameImageFix);
                 $url = Cit_Server::getStatic()->host . "imagenes/testcrop/" . $nameImageFix;
                 $image->urlaws=$url;
