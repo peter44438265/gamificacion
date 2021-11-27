@@ -4,9 +4,11 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-md-12 col-12">
-        <pan>panel</span>
-        <pan>panel2</span>
-        <pan>panel3</span>
+        <div class="row">
+            <div class ="col-4">panel</div>
+            <div class="col-4">panel2</div>
+            <div class="col-4">panel3</div>
+        </div>
     </div>
   </div>
   <div class = "row">
