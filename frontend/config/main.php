@@ -11,6 +11,8 @@ return [
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'controllerNamespace' => 'frontend\controllers',
+    'defaultRoute' => 'overview/default',
+    'name' => "Gamifi",
     'components' => [
         'request' => [
             'csrfParam' => '_csrf-frontend',
@@ -36,14 +38,18 @@ return [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
-        /*
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
             ],
         ],
-        */
+        
     ],
-    'params' => $params,
+    'modules' => require(dirname(__FILE__) . '/modules.php'),
+    /*'modules' => ['login' => [
+        'class' => 'frontend\modules\login\Module'
+        ]
+    ],*/
+    'params' => $params
 ];
