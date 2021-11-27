@@ -38,6 +38,7 @@ AppAsset::register($this);
         ['label' => 'Inicio', 'url' => ['/site/index']],
         ['label' => 'Nosotros', 'url' => ['/site/about']],
         ['label' => 'Contacto', 'url' => ['/site/contact']],
+        ['label' => 'Dashboard', 'url' => ['/dashboard']]
     ];
     if (Yii::$app->user->isGuest) {
         $menuItems[] = ['label' => 'Registro', 'url' => ['/site/signup']];
@@ -73,7 +74,6 @@ AppAsset::register($this);
 <footer class="footer mt-auto py-3 text-muted">
     <div class="container">
         <p class="float-left">&copy; <?= Html::encode(Yii::$app->name) ?> <?= date('Y') ?></p>
-        <p class="float-right"><?= Yii::powered() ?></p>
     </div>
 </footer>
 

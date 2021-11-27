@@ -14,6 +14,15 @@ return [
     'defaultRoute' => 'overview/default',
     'name' => "Gamifi",
     'components' => [
+        'view' => [
+            'theme' => [
+                'basePath' => '@webroot/themes/gamify',
+                'baseUrl' => '@web/themes/gamify',
+                'pathMap' => [
+                    '@app/views' => '@webroot/themes/gamify/views',
+                ]
+            ]
+        ],
         'request' => [
             'csrfParam' => '_csrf-frontend',
         ],

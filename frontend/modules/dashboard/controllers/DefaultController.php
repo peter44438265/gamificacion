@@ -1,6 +1,6 @@
 <?php
 
-namespace frontend\modules\login\controllers;
+namespace frontend\modules\dashboard\controllers;
 
 use yii\web\Controller;
 
@@ -15,6 +15,7 @@ class DefaultController extends Controller
      */
     public function actionIndex()
     {
+        //$this->layout = 'dashboard-app';
         return $this->render('index');
     }
 }

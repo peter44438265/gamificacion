@@ -1,8 +1,8 @@
 <?php
 
 return [
-    'login' => [
-        'class' => 'frontend\modules\login\Module',
+    'dashboard' => [
+        'class' => 'frontend\modules\dashboard\Module',
         'defaultRoute' => 'default'
     ],
     'overview' => [

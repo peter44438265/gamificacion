@@ -1,6 +1,6 @@
 <?php
 
-namespace frontend\modules\login;
+namespace frontend\modules\dashboard;
 
 /**
  * login module definition class
@@ -10,7 +10,7 @@ class Module extends \yii\base\Module
     /**
      * {@inheritdoc}
      */
-    public $controllerNamespace = 'frontend\modules\login\controllers';
+    public $controllerNamespace = 'frontend\modules\dashboard\controllers';
 
     /**
      * {@inheritdoc}
