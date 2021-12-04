@@ -15,7 +15,7 @@ class DefaultController extends Controller
      */
     public function actionIndex()
     {
-        //$this->layout = 'dashboard-app';
+        $this->layout = 'dashboard-app';
         return $this->render('index');
     }
 }
