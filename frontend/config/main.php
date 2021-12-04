@@ -23,6 +23,10 @@ return [
                 ]
             ]
         ],
+        'frontendCache' => [
+            'class' => 'yii\caching\FileCache',
+            'cachePath' => Yii::getAlias('@frontend') . '/runtime/cache'
+        ],
         'request' => [
             'csrfParam' => '_csrf-frontend',
         ],
